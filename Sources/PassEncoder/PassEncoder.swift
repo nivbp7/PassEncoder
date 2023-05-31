@@ -194,7 +194,7 @@ public class PassEncoder {
     
     public func unzip() {
         let fileManager = FileManager()
-        let currentWorkingPath = fileManager.currentDirectoryPath
+        let currentWorkingPath = FileManager.default.temporaryDirectory.path
         var sourceURL = archive.url
         sourceURL.appendPathComponent("archive.zip")
         var destinationURL = URL(fileURLWithPath: currentWorkingPath)
