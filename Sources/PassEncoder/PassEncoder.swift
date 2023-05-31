@@ -196,7 +196,7 @@ public class PassEncoder {
         let fileManager = FileManager()
         let currentWorkingPath = FileManager.default.temporaryDirectory.path
         var sourceURL = archive.url
-        sourceURL.appendPathComponent("archive.zip")
+//        sourceURL.appendPathComponent("archive.zip")
         var destinationURL = URL(fileURLWithPath: currentWorkingPath)
         destinationURL.appendPathComponent("manifest")
         do {
