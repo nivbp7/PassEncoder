@@ -181,4 +181,15 @@ public class PassEncoder {
 //        let signURL = temporaryURL(for: "signature")
 //        addFileToArchive(with: "signature")
 //    }
+    
+    public func archivedData() throws -> Data {
+        do {
+            let data = try Data(contentsOf: archive.url)
+            return data
+        }
+        catch {
+            throw error
+        }
+    }
+    
 }
