@@ -176,4 +176,14 @@ public class PassEncoder {
         
         return try? Data(contentsOf: archive.url)
     }
+    
+    public func archivedData() throws -> Data {
+        do {
+            let data = try Data(contentsOf: archive.url)
+            return data
+        }
+        catch {
+            throw error
+        }
+    }
 }
