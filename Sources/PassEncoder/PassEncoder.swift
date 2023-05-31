@@ -199,20 +199,25 @@ public class PassEncoder {
 //        sourceURL.appendPathComponent("archive.zip")
         var destinationURL = URL(fileURLWithPath: currentWorkingPath)
         destinationURL.appendPathComponent("manifest")
-        do {
-            try fileManager.createDirectory(at: destinationURL, withIntermediateDirectories: true, attributes: nil)
+//        do {
+//            try fileManager.createDirectory(at: destinationURL, withIntermediateDirectories: true, attributes: nil)
             do {
                 try fileManager.unzipItem(at: sourceURL, to: destinationURL)
             }
             catch {
                 print("Could not unzip error:\(error)")
             }
+        do {
             let data = try Data(contentsOf: destinationURL)
             print("data")
             print(data)
-        } catch {
-            print("Could not crate dir error:\(error)")
         }
+        catch {
+            print("Could not get data:\(error)")
+        }
+//        } catch {
+//            print("Could not crate dir error:\(error)")
+//        }
     }
     
 }
