@@ -81,6 +81,12 @@ public class PassEncoder {
         return true
     }
 
+    public func addFileWithoutHash(named name: String, from data: Data) -> Bool {
+        guard writeTemporaryFile(to: name, data: data), addFileToArchive(with: name) else { return false }
+        return true
+    }
+    
+    
     /// Add a file entry to the archive without first creating a temporary file on the filesystem. This is especially
     /// useful for localized files, which would need to be in a subdirectory, e.g.: `en.lproj/pass.strings`
     /// - Parameters:
@@ -163,4 +169,16 @@ public class PassEncoder {
         
         return try? Data(contentsOf: archive.url)
     }
+    
+//    public func addSignature(from url: URL) throws {
+//        do {
+//            let sigData = try Data(contentsOf: url)
+//        }
+//        catch {
+//            throw error
+//        }
+//        
+//        let signURL = temporaryURL(for: "signature")
+//        addFileToArchive(with: "signature")
+//    }
 }
