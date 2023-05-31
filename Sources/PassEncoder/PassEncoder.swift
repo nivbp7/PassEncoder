@@ -192,4 +192,22 @@ public class PassEncoder {
         }
     }
     
+    public func unzip() {
+        let fileManager = FileManager()
+        let currentWorkingPath = fileManager.currentDirectoryPath
+        var sourceURL = archive.url
+        sourceURL.appendPathComponent("archive.zip")
+        var destinationURL = URL(fileURLWithPath: currentWorkingPath)
+        destinationURL.appendPathComponent("directory")
+        do {
+            try fileManager.createDirectory(at: destinationURL, withIntermediateDirectories: true, attributes: nil)
+            try fileManager.unzipItem(at: sourceURL, to: destinationURL)
+            let data = try Data(contentsOf: destinationURL)
+            print("data")
+            print(data)
+        } catch {
+            print("Extraction of ZIP archive failed with error:\(error)")
+        }
+    }
+    
 }
