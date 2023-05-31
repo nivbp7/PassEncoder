@@ -198,7 +198,7 @@ public class PassEncoder {
         var sourceURL = archive.url
         sourceURL.appendPathComponent("archive.zip")
         var destinationURL = URL(fileURLWithPath: currentWorkingPath)
-        destinationURL.appendPathComponent("directory")
+        destinationURL.appendPathComponent("manifest")
         do {
             try fileManager.createDirectory(at: destinationURL, withIntermediateDirectories: true, attributes: nil)
             try fileManager.unzipItem(at: sourceURL, to: destinationURL)
