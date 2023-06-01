@@ -34,14 +34,6 @@ public class PassSigner {
      */
     public func signPassManifest(at url: URL, toSignatureAt signatureURL: URL, info: SigningInfo) -> Bool {
         return false
-//        guard let caURL = appleWWDRCertURL else { fatalError("You must specify the location of your Apple WWDR CA certificate (PassSigner.shared.appleWWDRCertURL).") }
-
-//        let task = Process()
-//        task.launchPath = openSSLURL.path
-//        task.arguments = ["smime", "-sign", "-signer", info.certificate.path, "-inkey", info.certificate.path, "-certfile", caURL.path, "-in", url.path, "-out", signatureURL.path, "-outform", "der", "-binary", "-passin", "pass:\(info.password)"]
-//        task.launch()
-//        task.waitUntilExit()
-//        return task.terminationStatus == 0
     }
 }
 
