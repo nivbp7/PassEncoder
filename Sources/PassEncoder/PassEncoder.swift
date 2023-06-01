@@ -161,7 +161,7 @@ public class PassEncoder {
      Create a manifest.json file that has the hashes for pass.json and the rest of the files (icons, localization) and return an unsigned and archived pass as `Data`.
      - returns: The pass's data, if successful.
      */
-    public func encode() -> Data? {
+    public func createManifest() -> Data? {
         guard !isUsed else { fatalError("This PassEncoder has already been used, and may not be used again.") }
         isUsed = true
         
