@@ -184,4 +184,8 @@ public class PassEncoder {
             throw error
         }
     }
+    
+    public func archiveURL() -> URL {
+        return archive.url
+    }
 }
