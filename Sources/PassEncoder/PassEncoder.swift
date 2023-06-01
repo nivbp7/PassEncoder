@@ -81,6 +81,13 @@ public class PassEncoder {
         return true
     }
 
+    /**
+     Add a file with the provided data to the pass with the provided name.
+     The `data` is not hashed. This is useful when adding the signature to the archive.
+     - parameter name: The name of the file to add in the pass's directory.
+     - parameter data: The data to create the file with.
+     - returns: Whether or not the operation was successful.
+     */
     public func addFileWithoutHash(named name: String, from data: Data) -> Bool {
         guard writeTemporaryFile(to: name, data: data), addFileToArchive(with: name) else { return false }
         return true
@@ -151,8 +158,7 @@ public class PassEncoder {
     // MARK: - Final Encoding
     
     /**
-     Perform the encoding process and return the signed and archived pass as `Data`.
-     - parameter signingInfo: The certificate and password to sign the pass with. If left out, the pass will not be signed.
+     Create a manifest.json file that has the hashes for pass.json and the rest of the files (icons, localization) and return an unsigned and archived pass as `Data`.
      - returns: The pass's data, if successful.
      */
     public func encode() -> Data? {
@@ -162,26 +168,13 @@ public class PassEncoder {
         // Write our manifest
         guard addJSONFile(named: "manifest.json", data: hashes) else { return nil }
         
-//        if let signingInfo = signingInfo {
-//            // Sign our manifest and add the signature to the archive
-//            guard PassSigner.shared.signPassManifest(at: temporaryURL(for: "manifest.json"), toSignatureAt: temporaryURL(for: "signature"), info: signingInfo), addFileToArchive(with: "signature") else { return nil }
-//        }
-        
         return try? Data(contentsOf: archive.url)
     }
     
-//    public func addSignature(from url: URL) throws {
-//        do {
-//            let sigData = try Data(contentsOf: url)
-//        }
-//        catch {
-//            throw error
-//        }
-//        
-//        let signURL = temporaryURL(for: "signature")
-//        addFileToArchive(with: "signature")
-//    }
-    
+    /**
+     Request the archived data. This is useful for returning all the archive after the signature has been added.
+     - returns: The pass's data or throws an error.
+     */
     public func archivedData() throws -> Data {
         do {
             let data = try Data(contentsOf: archive.url)
@@ -191,5 +184,4 @@ public class PassEncoder {
             throw error
         }
     }
-    
 }
