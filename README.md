@@ -2,18 +2,19 @@
 
 Apple Wallet (formerly Passbook) pass encoding and signing in Swift.
 
+Works on iOS! (Sign the manifest on a Mac)
+
 ## Features
 
 - Modern Swift API
 - Allows you to specify custom pass data
 - Add other files (images, JSON, etc)
 - Manifest generation
-- Signing support
 - File system managed seamlessly
 - Get pass `Data` easily
 
 ## Requirements
-
+- iOS 13+
 - macOS 10.12+ or Linux (with zlib development package)
 - Xcode 9.0+
 - Swift 5.2+
@@ -25,21 +26,40 @@ Apple Wallet (formerly Passbook) pass encoding and signing in Swift.
 
 Add the following line to your dependencies section of `Package.swift`:
 
-    .package(url: "https://github.com/aydenp/PassEncoder.git", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/nivbp7/PassEncoder.git", branch: "master")
 
 and add "PassEncoder" to your target's dependencies.
 
 ## Usage
 
-    // Create our encoder
-    if let encoder = PassEncoder(passDataURL: directory.appendingPathComponent("pass.json")) {
-        // Add a nice icon
-        encoder.addFile(from: directory.appendingPathComponent("icon.png"))
-        let passData = encoder.encode(signingInfo: (certificate: URL_TO_CERT.PEM, password: CERT_PASSWORD))
-        // Your archived .pkpass file is in passData as Data
-    }
+    let data = Data(jsonString.utf8) //create a Data object from a JSON string 
     
-Before using the library, you'll also need to set the Apple WWDR certificate URL, which you can [read about below](#creating-and-preparing-your-certificate).
+    // Create our encoder 
+    guard let encoder = PassEncoder(passData: data) else {return}
+            
+    // Add the required icons and logos
+    guard let iconPath = Bundle.main.url(forResource: "icon", withExtension: "png"),
+        let icon2Path = Bundle.main.url(forResource: "icon2", withExtension: "png"),
+        let logoPath = Bundle.main.url(forResource: "logo", withExtension: "png"),
+        let logo2Path = Bundle.main.url(forResource: "logo2", withExtension: "png")
+    else {return}
+        
+    encoder.addFile(from: iconPath)
+    encoder.addFile(from: icon2Path)
+    encoder.addFile(from: logoPath)
+    encoder.addFile(from: logo2Path)
+
+    // Create the manifest
+    guard let passData = encoder.createManifest() else {return}
+
+    * Sign the manifest file on your Mac * 
+
+    // Add the manifest to the encoder
+    encoder.addFileWithoutHash(named: "signature", from: data)
+        
+    // Your archived .pkpass file as Data
+    let signedData = try self.encoder.archivedData()
+    
     
 > **Heads up!** Operations in this library are all synchronous, so it is advisable to run them on a separate `OperationQueue` so that they do not block your thread.
 
@@ -55,20 +75,15 @@ You need to repeat this step for each different `passTypeId` you have in your `p
 
 You'll also need to download the Apple Worldwide Developer Relations Root Certificate Authority file to sign passes.
 
-1. Download the [certificate from here](https://developer.apple.com/certificationauthority/AppleWWDRCA.cer).
-2. Import it into Keychain Access (double click it).
+1. Download the [certificate from here](https://www.apple.com/certificateauthority/).
+2. Import it into Keychain Access (double-click it).
 3. Find it in Keychain Access, and export it as a .pem file.
-4. Set the `PassSigner`'s WWDR URL to it in your code.
-
-        PassSigner.shared.appleWWDRCertURL = URL(fileURLWithPath: PATH_TO_WWDR_CERT.PEM)
 
 ## Documentation
 
-To take full advantage of the package, check out the [documentation](https://aydenp.github.io/PassEncoder/) and see all of the methods and variables that are made available to you.
+For documentation of the original repo, check out the [documentation](https://aydenp.github.io/PassEncoder/) and see all of the methods and variables that are made available to you.
 
 ## Contributing
-
-Feel free to contribute to the source code of PassEncoder to make it something even better! Just try to adhere to the general coding style throughout, to make it as readable as possible.
 
 If you find an issue in the code or while using it, [create an issue](/issues/new). If you can, you're encouraged to contribute and make a [pull request](/pulls).
 
@@ -78,6 +93,3 @@ This project is licensed under the [MIT license](/LICENSE). Please make sure you
 
 ## Links
 
-- [My website](https://www.madebyayden.co)
-- [GitHub](https://www.github.com/aydenp/PassEncoder)
-- [Documentation](https://aydenp.github.io/PassEncoder/)
